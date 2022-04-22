@@ -6,6 +6,7 @@ let cache = [];
 const limit = 20;
 const data = generateData(1500);
 const search = (s, begin, result) => {
+  console.log("Search");
   if (begin > data.length || result.length >= limit) return result;
   const r = data
     .slice(begin, begin + limit)
@@ -23,8 +24,6 @@ export default function App(props) {
       cache[w] = search(w, 0, []);
     }
     setResult(cache[w]);
-    const r = search(e.target.value, 0, []);
-    setResult(r);
     const r2 = data.filter((d) => d.display.indexOf(e.target.value) > -1);
     setResult2(r2);
   };
