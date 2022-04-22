@@ -2,6 +2,7 @@ import "./App.css";
 import React, { useState } from "react";
 import { generateData } from "./data";
 
+let cache = [];
 const limit = 20;
 const data = generateData(1500);
 const search = (s, begin, result) => {
@@ -17,6 +18,11 @@ export default function App(props) {
   const [result2, setResult2] = useState(defaultBegin);
   const [result, setResult] = useState(defaultBegin);
   const handleChange = (e) => {
+    const w = e.target.value;
+    if (!cache[w]) {
+      cache[w] = search(w, 0, []);
+    }
+    setResult(cache[w]);
     const r = search(e.target.value, 0, []);
     setResult(r);
     const r2 = data.filter((d) => d.display.indexOf(e.target.value) > -1);
