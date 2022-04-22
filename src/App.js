@@ -2,17 +2,23 @@ import "./App.css";
 import React, { useState } from "react";
 import { generateData } from "./data";
 
-let cache = [];
+let caches = {};
 const limit = 20;
 const data = generateData(1500);
 const search = (s, begin, result) => {
-  console.log("Search");
   if (begin > data.length || result.length >= limit) return result;
-  const r = data
-    .slice(begin, begin + limit)
-    .filter((d) => d.display.indexOf(s) > -1);
-  const searchResult = search(s, begin + limit, [...result, ...r]);
-  return searchResult;
+  const end = begin + limit;
+  const r = data.slice(begin, end).filter((d) => d.display.indexOf(s) > -1);
+  caches[s] = { result: [...result, ...r], end };
+  if (r.length >= limit) return r;
+  return search(s, end, [...result, ...r]);
+};
+const getResult = (w) => {
+  console.log(caches);
+  if (caches[w]) return caches[w].result;
+  if (caches[w.slice(0, -1)])
+    return search(w, caches[w.slice(0, -1)].end, caches[w.slice(0, -1)].result);
+  return search(w, 0, []);
 };
 export default function App(props) {
   const defaultBegin = data.slice(0, limit);
@@ -20,10 +26,7 @@ export default function App(props) {
   const [result, setResult] = useState(defaultBegin);
   const handleChange = (e) => {
     const w = e.target.value;
-    if (!cache[w]) {
-      cache[w] = search(w, 0, []);
-    }
-    setResult(cache[w]);
+    setResult(getResult(w));
     const r2 = data.filter((d) => d.display.indexOf(e.target.value) > -1);
     setResult2(r2);
   };
