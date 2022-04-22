@@ -2,18 +2,18 @@ import "./App.css";
 import React, { useState } from "react";
 import { generateData } from "./data";
 
-const limit = 10;
+const limit = 20;
 const data = generateData(1500);
 const search = (s, begin, result) => {
   if (begin > data.length || result.length >= limit) return result;
   const r = data
-    .slice(begin, begin + 10)
+    .slice(begin, begin + limit)
     .filter((d) => d.display.indexOf(s) > -1);
   const searchResult = search(s, begin + limit, [...result, ...r]);
   return searchResult;
 };
 export default function App(props) {
-  const defaultBegin = data.slice(0, 10);
+  const defaultBegin = data.slice(0, limit);
   const [result2, setResult2] = useState(defaultBegin);
   const [result, setResult] = useState(defaultBegin);
   const handleChange = (e) => {
