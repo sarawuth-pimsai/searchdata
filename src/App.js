@@ -6,18 +6,18 @@ let caches = {};
 const limit = 20;
 const data = generateData(1500);
 const search = (s, begin, result) => {
-  if (begin > data.length || result.length >= limit) return result;
+  if (begin > data.length || result.length >= limit) return result
   const end = begin + limit;
   const r = data.slice(begin, end).filter((d) => d.display.indexOf(s) > -1);
-  caches[s] = { result: [...result, ...r], end };
-  if (r.length >= limit) return r;
+  caches[s] = {begin, end, result: [...result, ...r]}
+  if (r.length >= limit) return r; 
   return search(s, end, [...result, ...r]);
 };
 const getResult = (w) => {
-  console.log(caches);
   if (caches[w]) return caches[w].result;
-  if (caches[w.slice(0, -1)])
-    return search(w, caches[w.slice(0, -1)].end, caches[w.slice(0, -1)].result);
+  if (caches[w.slice(0, -1)]){
+    return search(w, caches[w.slice(0, -1)].end, caches[w.slice(0, -1)].result.filter(r => r.display.indexOf(w) > -1))
+  }
   return search(w, 0, []);
 };
 export default function App(props) {
@@ -26,7 +26,7 @@ export default function App(props) {
   const [result, setResult] = useState(defaultBegin);
   const handleChange = (e) => {
     const w = e.target.value;
-    setResult(getResult(w));
+    setResult(getResult(w).slice(0, 20));
     const r2 = data.filter((d) => d.display.indexOf(e.target.value) > -1);
     setResult2(r2);
   };
