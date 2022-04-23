@@ -6,11 +6,11 @@ let caches = {};
 const limit = 20;
 const data = generateData(1500);
 const search = (s, begin, result) => {
-  if (begin > data.length || result.length >= limit) return result
+  if (begin > data.length) return result
   const end = begin + limit;
   const r = data.slice(begin, end).filter((d) => d.display.indexOf(s) > -1);
   caches[s] = {begin, end, result: [...result, ...r]}
-  if (r.length >= limit) return r; 
+  if ([...result, ...r].length >= limit) return [...result, ...r]; 
   return search(s, end, [...result, ...r]);
 };
 const getResult = (w) => {
