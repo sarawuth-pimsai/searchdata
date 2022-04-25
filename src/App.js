@@ -3,10 +3,11 @@ import React, { useState } from "react";
 import { generateData } from "./data";
 
 let caches = {};
-const limit = 20;
+const limit = 100;
 const data = generateData(1500);
 const search = (s, begin, result) => {
-  if (begin > data.length) return result;
+  if (begin >= data.length) return result;
+  console.log(`search key: ${s} begin: ${begin} result: ${result.length}`);
   const end = begin + limit;
   const r = data.slice(begin, end).filter((d) => d.display.indexOf(s) > -1);
   caches[s] = { begin, end, result: [...result, ...r] };
@@ -35,7 +36,7 @@ export default function App(props) {
     setResult2(r2);
   };
   return (
-    <div className="App">
+    <div className="App" style={{ paddingTop: "20px" }}>
       <input type="text" onChange={handleChange} autoFocus />
       <div style={{ display: "flex", justifyContent: "center" }}>
         <table>
