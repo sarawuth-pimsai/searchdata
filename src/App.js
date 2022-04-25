@@ -7,7 +7,6 @@ const limit = 100;
 const data = generateData(1500);
 const search = (s, begin, result) => {
   if (begin >= data.length) return result;
-  console.log(`search key: ${s} begin: ${begin} result: ${result.length}`);
   const end = begin + limit;
   const r = data.slice(begin, end).filter((d) => d.display.indexOf(s) > -1);
   caches[s] = { begin, end, result: [...result, ...r] };
