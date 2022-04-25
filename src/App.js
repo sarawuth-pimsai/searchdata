@@ -6,12 +6,17 @@ let caches = {};
 const limit = 20;
 const data = generateData(1500);
 const search = (s, begin, result) => {
+  console.log("search");
   if (begin > data.length || result.length >= limit) return result;
   const end = begin + limit;
-  const r = data.slice(begin, end).filter((d) => d.display.indexOf(s) > -1);
-  caches[s] = { result: [...result, ...r], end };
+  const r = [
+    ...result,
+    ...data.slice(begin, end).filter((d) => d.display.indexOf(s) > -1),
+  ];
+  console.log(data.slice(begin, end));
+  caches[s] = { result: r, end };
   if (r.length >= limit) return r;
-  return search(s, end, [...result, ...r]);
+  return search(s, end, r);
 };
 const getResult = (w) => {
   console.log(caches);
