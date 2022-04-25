@@ -1,9 +1,9 @@
 import "./App.css";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { generateData } from "./data";
 
 let caches = {};
-const limit = 100;
+const limit = 20;
 const data = generateData(1500);
 const search = (s, begin, result) => {
   if (begin >= data.length) return result;
@@ -26,11 +26,14 @@ const getResult = (w) => {
 };
 export default function App(props) {
   const defaultBegin = data.slice(0, limit);
+  const [worlding, setWording] = useState("");
   const [result2, setResult2] = useState(defaultBegin);
-  const [result, setResult] = useState(defaultBegin);
+  const memoResult = useMemo(() => {
+    return getResult(worlding).slice(0, limit);
+  }, [worlding]);
   const handleChange = (e) => {
     const w = e.target.value;
-    setResult(getResult(w).slice(0, 20));
+    setWording(w);
     const r2 = data.filter((d) => d.display.indexOf(e.target.value) > -1);
     setResult2(r2);
   };
@@ -58,7 +61,7 @@ export default function App(props) {
                   paddingRight: "10px",
                 }}
               >
-                Performance
+                Memo
               </th>
             </tr>
           </thead>
@@ -96,7 +99,7 @@ export default function App(props) {
                 }}
               >
                 <div>
-                  {result.map((d, i) => {
+                  {memoResult.map((d, i) => {
                     return <p key={`p_${i}`}>{d.display}</p>;
                   })}
                 </div>
