@@ -25,35 +25,22 @@ const getResult = (w) => {
   return search(w, 0, []);
 };
 export default function App(props) {
-  const defaultBegin = data.slice(0, limit);
   const [worlding, setWording] = useState("");
-  const [result2, setResult2] = useState(defaultBegin);
   const memoResult = useMemo(() => {
     return getResult(worlding).slice(0, limit);
   }, [worlding]);
-  const handleChange = (e) => {
-    const w = e.target.value;
-    setWording(w);
-    const r2 = data.filter((d) => d.display.indexOf(e.target.value) > -1);
-    setResult2(r2);
-  };
   return (
     <div className="App" style={{ paddingTop: "20px" }}>
-      <input type="text" onChange={handleChange} autoFocus />
+      <input
+        type="text"
+        onChange={(event) => setWording(event.currentTarget.value)}
+        autoFocus
+      />
       <div style={{ display: "flex", justifyContent: "center" }}>
         <table>
           <thead>
             <tr>
               <th>Number</th>
-              <th
-                style={{
-                  verticalAlign: "top",
-                  paddingLeft: "10px",
-                  paddingRight: "10px",
-                }}
-              >
-                Base
-              </th>
               <th
                 style={{
                   verticalAlign: "top",
@@ -74,22 +61,9 @@ export default function App(props) {
                   paddingRight: "10px",
                 }}
               >
-                {result2.map((v, i) => (
+                {memoResult.map((v, i) => (
                   <p key={`n_${i}`}>{i + 1}</p>
                 ))}
-              </td>
-              <td
-                style={{
-                  verticalAlign: "top",
-                  paddingLeft: "10px",
-                  paddingRight: "10px",
-                }}
-              >
-                <div>
-                  {result2.map((d, i) => {
-                    return <p key={`b_${i}`}>{d.display}</p>;
-                  })}
-                </div>
               </td>
               <td
                 style={{
