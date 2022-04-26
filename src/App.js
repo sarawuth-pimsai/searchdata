@@ -8,7 +8,7 @@ const data = generateData(1500);
 const search = (s, begin, result) => {
   if (begin >= data.length) return result;
   const end = begin + limit;
-  const r = data.slice(begin, end).filter((d) => d.display.indexOf(s) > -1);
+  const r = data.slice(begin, end).filter((d) => d.display.includes(s));
   caches[s] = { begin, end, result: [...result, ...r] };
   if ([...result, ...r].length >= limit) return [...result, ...r];
   return search(s, end, [...result, ...r]);
@@ -19,7 +19,7 @@ const getResult = (w) => {
     return search(
       w,
       caches[w.slice(0, -1)].end,
-      caches[w.slice(0, -1)].result.filter((r) => r.display.indexOf(w) > -1)
+      caches[w.slice(0, -1)].result.filter((r) => r.display.includes(w))
     );
   }
   return search(w, 0, []);
